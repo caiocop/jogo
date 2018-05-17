@@ -1,0 +1,115 @@
+<!Doctype html>
+<html>
+<head>
+ <title>USCS - Aula 13 A - Teclado.js</title>
+ <meta charset="utf-8">
+ <script src="lib/build/three.min.js"></script>
+
+
+  <style>
+  * { margin: 0;
+      padding: 0;
+    }
+      html, body{
+      overflow: hidden;
+    }
+ </style>
+</head>
+<body>
+<script>
+
+	var scene = new THREE.Scene();
+	var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 20000 );
+
+  scene.add(camera);
+  camera.position.set(30,120,450);
+
+
+	var renderer = new THREE.WebGLRenderer( { antialiasing: true } );
+	renderer.setSize(window.innerWidth, window.innerHeight);
+
+  document.body.appendChild( renderer.domElement );
+
+	renderer.shadowMapEnabled = true;
+
+  var cubeGeometryPhong = new THREE.BoxGeometry( 50, 50, 50 );
+  var materiais = [];
+
+  materiais.push(
+    new THREE.MeshPhongMaterial(
+      { map: THREE.ImageUtils.loadTexture("img/lado01.jpg"),
+        side: THREE.DoubleSide }
+    )
+  );
+
+  materiais.push(
+    new THREE.MeshPhongMaterial(
+      { map: THREE.ImageUtils.loadTexture("img/lado02.jpg"),
+        side: THREE.DoubleSide }
+    )
+  );
+
+  materiais.push(
+    new THREE.MeshPhongMaterial(
+      { map: THREE.ImageUtils.loadTexture("img/lado03.jpg"),
+        side: THREE.DoubleSide }
+    )
+  );
+
+  materiais.push(
+    new THREE.MeshPhongMaterial(
+      { map: THREE.ImageUtils.loadTexture("img/lado04.jpg"),
+        side: THREE.DoubleSide }
+    )
+  );
+
+  materiais.push(
+    new THREE.MeshPhongMaterial(
+      { map: THREE.ImageUtils.loadTexture("img/lado05.jpg"),
+        side: THREE.DoubleSide }
+    )
+  );
+
+  materiais.push(
+    new THREE.MeshPhongMaterial(
+      { map: THREE.ImageUtils.loadTexture("img/lado06.jpg"),
+        side: THREE.DoubleSide }
+    )
+  );
+
+  var l = cubeGeometryPhong.faces.length / 2;
+
+  for (var i=0; i < l; i++) {
+    var j = 2 * i;
+    cubeGeometryPhong.faces[j].materialIndex = i % 6;
+    cubeGeometryPhong.faces[j + 1].materialIndex = i % 6;
+  }
+
+  var mesh = new THREE.Mesh(cubeGeometryPhong, new THREE.MeshFaceMaterial(materiais));
+  mesh.position.set(25,125, 300);
+
+  scene.add(mesh);
+
+
+  var light = new THREE.AmbientLight( 0xFFFFFF);
+  scene.add( light );
+
+
+
+
+
+  function render(){
+		requestAnimationFrame( render );
+    mesh.rotation.y -= .01;
+    mesh.rotation.x += .01;
+
+		renderer.render(scene, camera);
+	}
+
+
+	render();
+
+
+</script>
+</body>
+</html>

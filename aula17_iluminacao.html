@@ -1,0 +1,91 @@
+<!Doctype html>
+<html>
+<head>
+ <title>USCS - Aula 13 A - Teclado.js</title>
+ <meta charset="utf-8">
+ <script src="lib/build/three.min.js"></script>
+
+
+  <style>
+  * { margin: 0;
+      padding: 0;
+    }
+      html, body{
+      overflow: hidden;
+    }
+ </style>
+</head>
+<body>
+<script>
+
+	var scene = new THREE.Scene();
+	var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 20000 );
+
+  scene.add(camera);
+	camera.position.set(30,120,450);
+
+	var renderer = new THREE.WebGLRenderer( { antialiasing: true } );
+	renderer.setSize(window.innerWidth, window.innerHeight);
+
+  document.body.appendChild( renderer.domElement );
+
+	renderer.shadowMapEnabled = true;
+
+  var cubeGeometryBasic = new THREE.BoxGeometry( 50, 50, 50 );
+	var cubeMaterialBasic = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+	var cubeBasic = new THREE.Mesh( cubeGeometryBasic, cubeMaterialBasic );
+	cubeBasic.position.set(-50,100,0);
+
+	scene.add(cubeBasic);
+
+
+	var cubeGeometryLambert = new THREE.BoxGeometry( 50, 50, 50 );
+	var cubeMaterialLambert = new THREE.MeshLambertMaterial( { color: 0xffffff } );
+	var cubeLambert = new THREE.Mesh( cubeGeometryLambert, cubeMaterialLambert );
+	cubeLambert.position.set(50,100,0);
+
+	scene.add(cubeLambert);
+
+
+  var cubeGeometryPhong = new THREE.BoxGeometry( 50, 50, 50 );
+	var cubeMaterialPhong = new THREE.MeshPhongMaterial( { color: 0xffffff } );
+	var cubePhong = new THREE.Mesh( cubeGeometryLambert, cubeMaterialLambert );
+	cubePhong.position.set(150,100,0);
+
+	scene.add(cubePhong);
+
+
+
+  var light = new THREE.AmbientLight( 0x404040);
+  scene.add( light );
+
+  var spotlight = new THREE.SpotLight(0xffffff);
+	spotlight.position.set(50,300,0);
+	spotlight.shadowCameraVisible = true;
+	spotlight.castShadow = true;
+	scene.add(spotlight);
+
+
+
+
+  function render(){
+		requestAnimationFrame( render );
+    cubeBasic.rotation.y -= .01;
+    cubeBasic.rotation.x += .01;
+
+		cubeLambert.rotation.y -= .01;
+    cubeLambert.rotation.x += .01;
+
+    cubePhong.rotation.y -= .01;
+    cubePhong.rotation.x += .01;
+
+		renderer.render(scene, camera);
+	}
+
+
+	render();
+
+
+</script>
+</body>
+</html>
