@@ -1,52 +1,42 @@
+var renderer = new THREE.WebGLRenderer();
+var updateFcts	= [];
+var geometry	= new THREE.BoxGeometry( 1, 1, 1);
+var material	= new THREE.MeshNormalMaterial();
+var mesh	= new THREE.Mesh( geometry, material );
 function start(){
-    //Definição da cena
-    var scene = new THREE.Scene();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( renderer.domElement );
+	var scene	= new THREE.Scene();
+	var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000 );
+    camera.position.z = 10;
+    
+	/////////////////////////////
+	//		add an object	   //
+    /////////////////////////////
+	
+	scene.add( mesh );
+	
+	///////////////////////////////
+	//		render the scene	 //
+	///////////////////////////////
+	updateFcts.push(function(){
+		renderer.render( scene, camera );		
+	})
+	/////////////////////////////
+	//		loop runner		   //
+	/////////////////////////////
+	var lastTimeMsec= null
+	requestAnimationFrame(function animate(nowMsec){
+		// keep looping
+		requestAnimationFrame( animate );
+		// measure time
+		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+		lastTimeMsec	= nowMsec
+		// call each update function
+		updateFcts.forEach(function(updateFn){
+			updateFn(deltaMsec/1000, nowMsec/1000)
+		})
+	})
 
-    //Definição da câmera >>> PerspectiveCamera( fov, aspect, near, far )
-    var camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
-    //Definição do renderizador
-    var renderer = new THREE.WebGLRenderer();
-
-    //Tamanho da viewport
-    renderer.setSize( window.innerWidth, window.innerHeight );
-
-    //Definimos a cor de limpeza
-    renderer.setClearColor( 0x000000, 1);
-
-    document.body.appendChild( renderer.domElement );
-
-    //Definição do Objeto
-    var sphere   = new THREE.SphereGeometry(0.10, 32, 32);
-
-    //Definição do Material
-    var material  = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexturduete("img/planetaterra.jpg"),
-    side: THREE.DoubleSide });
-    material.bumpMap = THREE.ImageUtils.loadTexture('img/planetaterrabump.jpg');
-    material.bumpScale = 0.04;
-
-    material.specularMap = THREE.ImageUtils.loadTexture('img/planetaterraspec.jpg');
-    material.specular = new THREE.Color('orange');
-
-    //material.wireframe = true;
-    var terraMesh = new THREE.Mesh(sphere, material);
-    terraMesh.position.set(1.6, 0.7, 0);
-    scene.add(terraMesh);
-
-    var light = new THREE.AmbientLight( 0xFFFFFF);
-    scene.add( light );
-
-    var light = new THREE.SpotLight();
-    light.position.set(100, 80, 30);
-    light.intensity = 1.2
-    scene.add(light);
-
-    camera.position.z = 4;
-
-    function render(){
-    requestAnimationFrame( render );
-    terraMesh.rotation.y += .01;
-    renderer.render( scene, camera );
-    }
-    render();
 }
