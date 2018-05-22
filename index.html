@@ -2,12 +2,104 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>USCS</title>
-	<style type="text/css" href="style/style.css" />
+	<title>Jogo</title>
+
+	<style type="text/css">
+		body {
+			margin: 0;
+			padding: 0;
+		}
+	</style>
 </head>
 <body>
-<script type="text/javascript" src="lib/three.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
-</script>
+
+<script type="text/javascript" src="lib/build/three.js"></script>
+<script type="text/javascript">
+
+	//Definição da cena
+	var scene = new THREE.Scene();
+	//Definição da câmera >>> PerspectiveCamera( fov, aspect, near, far )
+	var camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 1000 );
+	//Definição do renderizador
+	var renderer = new THREE.WebGLRenderer();
+	//Tamanho da viewport
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+	//Definimos a cor de limpeza
+	renderer.setClearColor( 0x000000, 1);
+
+	document.body.appendChild( renderer.domElement );
+
+
+	var material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+	var geometry = new THREE.Geometry();
+	geometry.vertices.push(new THREE.Vector3( -0.5, -0.8, 0) );
+	geometry.vertices.push(new THREE.Vector3( -0.5, 1, 0) );
+
+	var line = new THREE.Line( geometry, material );
+	scene.add( line );
+
+
+	var material2 = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+	var geometry2 = new THREE.Geometry();
+	geometry2.vertices.push(new THREE.Vector3( 0.5, -0.8, 0) );
+	geometry2.vertices.push(new THREE.Vector3( 0.5, 1, 0) );
+
+
+	var line2 = new THREE.Line( geometry2, material2 );
+	scene.add( line2 );
+
+	var material3 = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+	var geometry3 = new THREE.Geometry();
+	geometry3.vertices.push(new THREE.Vector3( -0.5, -0.8, 0) );
+	geometry3.vertices.push(new THREE.Vector3( 0.5, -0.8, 0) );
+
+	var line3 = new THREE.Line( geometry3, material3 );
+	scene.add( line3 );
+
+
+
+
+
+
+	//Definição do Objeto
+	var nave   = new THREE.OctahedronGeometry(0.05, 0);
+	//Definição do Material
+
+	var material  = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture("img/nave.jpg"),
+		side: THREE.DoubleSide });
+
+
+	//material.wireframe = true;
+
+
+	var naveMesh = new THREE.Mesh(nave, material);
+	naveMesh.position.set(0, -0.7, 0);
+	scene.add(naveMesh);
+
+
+	var light = new THREE.AmbientLight( 0xFFFFFF);
+  scene.add( light );
+
+	var light = new THREE.SpotLight(0x0000FF);
+    light.position.set(500, 0, 30);
+    light.intensity = 5;
+    scene.add(light);
+
+
+
+	camera.position.z = 4;
+
+	function render(){
+		requestAnimationFrame( render );
+		naveMesh.rotation.y += .01;
+		renderer.render( scene, camera );
+	}
+
+	render();
+
+
+
+	</script>
 </body>
 </html>
