@@ -31,6 +31,33 @@
 	document.body.appendChild( renderer.domElement );
 
 
+	var geometry = new THREE.CircleGeometry( 0.05, 32 );
+	var material = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } );
+	var circle = new THREE.Mesh( geometry, material );
+	circle.position.set(-0.4, 0.8, 0);
+	scene.add( circle );
+
+	var circle1 = new THREE.Mesh( geometry, material );
+	circle1.position.set(-0.25, 0.8, 0);
+	scene.add( circle1 );
+
+	var circle2 = new THREE.Mesh( geometry, material );
+	circle2.position.set(-0.1, 0.8, 0);
+	scene.add( circle2 );
+
+	var circle3 = new THREE.Mesh( geometry, material );
+	circle3.position.set(0.05, 0.8, 0);
+	scene.add( circle3 );
+
+	var circle4 = new THREE.Mesh( geometry, material );
+	circle4.position.set(0.2, 0.8, 0);
+	scene.add( circle4 );
+
+	var circle5 = new THREE.Mesh( geometry, material );
+	circle5.position.set(0.35, 0.8, 0);
+	scene.add( circle5 );
+
+
 	var material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
 	var geometry = new THREE.Geometry();
 	geometry.vertices.push(new THREE.Vector3( -0.5, -0.8, 0) );
@@ -58,6 +85,12 @@
 	scene.add( line3 );
 
 
+	var light1 = new THREE.PointLight(0x0000FF, 1.5, 230);
+	light1.add(new THREE.Mesh(geometry3, new THREE.Line ({ color: 0x0000FF })));
+
+	light1.position.set(-2, -1, 0);
+	scene.add(light1);
+
 
 
 
@@ -66,11 +99,10 @@
 	var nave   = new THREE.OctahedronGeometry(0.05, 0);
 	//Definição do Material
 
+
+
 	var material  = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture("img/nave.jpg"),
 		side: THREE.DoubleSide });
-
-
-	//material.wireframe = true;
 
 
 	var naveMesh = new THREE.Mesh(nave, material);
@@ -81,10 +113,10 @@
 	var light = new THREE.AmbientLight( 0xFFFFFF);
   scene.add( light );
 
-	var light = new THREE.SpotLight(0x0000FF);
-    light.position.set(500, 0, 30);
-    light.intensity = 5;
-    scene.add(light);
+	//var light = new THREE.SpotLight(0x0000FF);
+    //light.position.set(500, 0, 30);
+    //light.intensity = 5;
+    //scene.add(light);
 
 
 
@@ -93,6 +125,12 @@
 	function render(){
 		requestAnimationFrame( render );
 		naveMesh.rotation.y += .01;
+
+		circle3.position.y -= 0.02;
+		if (naveMesh.position.x >= circle3.position.x - 0.05 && naveMesh.position.x <= circle3.position.x + 0.05 &&
+			 naveMesh.position.y >= circle3.position.y - 0.05 && naveMesh.position.y <= circle3.position.y + 0.05 ) {
+			circle3.position.y = 0.8;
+		}
 		renderer.render( scene, camera );
 	}
 
