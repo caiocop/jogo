@@ -31,72 +31,42 @@
 	document.body.appendChild( renderer.domElement );
 
 
-	var geometry = new THREE.CircleGeometry( 0.05, 32 );
+	var geometry = new THREE.CircleGeometry( 0.02, 32 );
 	var material = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } );
+	var circulos = [];
 	var circle = new THREE.Mesh( geometry, material );
-	circle.position.set(-0.4, 0.8, 0);
+	circle.position.set(-1.4, 2.3, 0);
+	circulos.push(circle);
 	scene.add( circle );
 
 	var circle1 = new THREE.Mesh( geometry, material );
-	circle1.position.set(-0.25, 0.8, 0);
+	circle1.position.set(-1.0,  2.3, 0);
+	circulos.push(circle1);
 	scene.add( circle1 );
 
 	var circle2 = new THREE.Mesh( geometry, material );
-	circle2.position.set(-0.1, 0.8, 0);
+	circle2.position.set(-0.6,  2.3, 0);
+	circulos.push(circle2);
 	scene.add( circle2 );
 
 	var circle3 = new THREE.Mesh( geometry, material );
-	circle3.position.set(0.05, 0.8, 0);
+	circle3.position.set(0.0,  2.3, 0);
+	circulos.push(circle3);
 	scene.add( circle3 );
 
 	var circle4 = new THREE.Mesh( geometry, material );
-	circle4.position.set(0.2, 0.8, 0);
+	circle4.position.set(0.4,  2.3, 0);
+	circulos.push(circle4);
 	scene.add( circle4 );
 
 	var circle5 = new THREE.Mesh( geometry, material );
-	circle5.position.set(0.35, 0.8, 0);
+	circle5.position.set(0.8,  2.3, 0);
+	circulos.push(circle5);
 	scene.add( circle5 );
-
-
-	var material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
-	var geometry = new THREE.Geometry();
-	geometry.vertices.push(new THREE.Vector3( -0.5, -0.8, 0) );
-	geometry.vertices.push(new THREE.Vector3( -0.5, 1, 0) );
-
-	var line = new THREE.Line( geometry, material );
-	scene.add( line );
-
-
-	var material2 = new THREE.LineBasicMaterial( { color: 0x0000ff } );
-	var geometry2 = new THREE.Geometry();
-	geometry2.vertices.push(new THREE.Vector3( 0.5, -0.8, 0) );
-	geometry2.vertices.push(new THREE.Vector3( 0.5, 1, 0) );
-
-
-	var line2 = new THREE.Line( geometry2, material2 );
-	scene.add( line2 );
-
-	var material3 = new THREE.LineBasicMaterial( { color: 0x0000ff } );
-	var geometry3 = new THREE.Geometry();
-	geometry3.vertices.push(new THREE.Vector3( -0.5, -0.8, 0) );
-	geometry3.vertices.push(new THREE.Vector3( 0.5, -0.8, 0) );
-
-	var line3 = new THREE.Line( geometry3, material3 );
-	scene.add( line3 );
-
-
-	var light1 = new THREE.PointLight(0x0000FF, 1.5, 230);
-	light1.add(new THREE.Mesh(geometry3, new THREE.Line ({ color: 0x0000FF })));
-
-	light1.position.set(-2, -1, 0);
-	scene.add(light1);
-
-
-
-
+	
 
 	//Definição do Objeto
-	var nave   = new THREE.OctahedronGeometry(0.05, 0);
+	var nave   = new THREE.OctahedronGeometry(0.08, 0);
 	//Definição do Material
 
 
@@ -106,31 +76,40 @@
 
 
 	var naveMesh = new THREE.Mesh(nave, material);
-	naveMesh.position.set(0, -0.7, 0);
+	naveMesh.position.set(0, -2, 0);
 	scene.add(naveMesh);
 
 
 	var light = new THREE.AmbientLight( 0xFFFFFF);
-  scene.add( light );
+	scene.add( light );
 
 	//var light = new THREE.SpotLight(0x0000FF);
-    //light.position.set(500, 0, 30);
+    //light.position(500, 0, 30);
     //light.intensity = 5;
     //scene.add(light);
 
-
-
-	camera.position.z = 4;
+	camera.position.z = 10;
 
 	function render(){
 		requestAnimationFrame( render );
-		naveMesh.rotation.y += .01;
-
-		circle3.position.y -= 0.02;
-		if (naveMesh.position.x >= circle3.position.x - 0.05 && naveMesh.position.x <= circle3.position.x + 0.05 &&
-			 naveMesh.position.y >= circle3.position.y - 0.05 && naveMesh.position.y <= circle3.position.y + 0.05 ) {
-			circle3.position.y = 0.8;
+		naveMesh.rotation.y += .1;
+		
+		for(var i = 0; i <=5;i++){
+			distancia = Math.floor(Math.random() * 10)/300;
+			circulos[i].position.y -= distancia;
+			if (naveMesh.position.x >= circulos[i].position.x - 0.05 && naveMesh.position.x <= circulos[i].position.x + 0.05 &&
+				 naveMesh.position.y >= circulos[i].position.y - 0.05 && naveMesh.position.y <= circulos[i].position.y + 0.05 ) {
+				circulos[i].position.y = 2.3;
+				circulos[i].position.x = Math.floor(Math.random() * 10) - 5;
+			}			
+						
+			if (circulos[i].position.y - 0.05 <= -2.1 && circulos[i].position.y + 0.05 >= -2.1) {
+				circulos[i].position.y = 2.3;
+				circulos[i].position.x = (Math.random() * 10) -45;
+				console.log(circulos[i].position.x = (Math.random() * 10) -5);
+			}				
 		}
+		
 		renderer.render( scene, camera );
 	}
 
