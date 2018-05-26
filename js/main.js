@@ -66,7 +66,7 @@ function start(){
         naveMesh.rotation.y += .1;
 
         for (let i = 0; i <= 5; i++) {
-            distancia = Math.floor(Math.random() * 10) / 300;
+            distancia = Math.floor(Math.random() * 10) / 60;
             circulos[i].position.y -= distancia;
             if (naveMesh.position.x >= circulos[i].position.x - 0.05 && naveMesh.position.x <= circulos[i].position.x + 0.05 &&
                 naveMesh.position.y >= circulos[i].position.y - 0.05 && naveMesh.position.y <= circulos[i].position.y + 0.05) {
@@ -74,14 +74,16 @@ function start(){
                 circulos[i].position.x = Math.floor(Math.random() * 10) - 5;
             }
 
-            if (circulos[i].position.y - 0.05 <= -2.1 && circulos[i].position.y + 0.05 >= -2.1) {
+            if (circulos[i].position.y - 0.05 < -2.1) {
                 circulos[i].position.y = 2.3;
-                circulos[i].position.x = (Math.random() * 10) - 45;
+                circulos[i].position.x = (Math.random() * 8) - 5
+                ;
+                console.log(circulos[i].position.x);
             }
         }
         lastTimeMsec  = lastTimeMsec || nowMsec-1000/60
         let deltaMsec  = Math.min(200, nowMsec - lastTimeMsec)
-        lastTimeMsec  = nowMsec
+        lastTimeMsec  = nowMsec;
         // call each update function
         updateFcts.forEach(function(updateFn){
             updateFn(deltaMsec/1000, nowMsec/1000)
