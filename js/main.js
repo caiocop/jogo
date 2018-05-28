@@ -1,13 +1,16 @@
+
 let updateFcts	= [];
 let renderer = new THREE.WebGLRenderer();
+console.log("renderer");
 //nave
-let nave   = new THREE.OctahedronGeometry(0.08, 32);
-var material  = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture("img/nave2.jpg"), side: THREE.DoubleSide });
-let naveMesh = new THREE.Mesh(nave, material);
-
+var nave   = new THREE.OctahedronGeometry(0.08, 0);
+var material  = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture("img/nave.jpg"), side: THREE.DoubleSide });
+var naveMesh = new THREE.Mesh(nave, material);
+console.log("nave");
 var hit = false;
 var point = 0;
 function start(){
+    console.log("start");
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 1000 );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -40,29 +43,29 @@ function start(){
     camera.position.z = 10;
 
     // Load the background texture
-        var texture = THREE.ImageUtils.loadTexture("img/espaco.jpg");
-        var backgroundMesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(2, 2, 0),
-            new THREE.MeshBasicMaterial({
-                map: texture
-            }));
+    var texture = THREE.ImageUtils.loadTexture("img/espaco.jpg");
+    var backgroundMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(2, 2, 0),
+        new THREE.MeshBasicMaterial({
+            map: texture
+        }));
 
-        backgroundMesh .material.depthTest = false;
-        backgroundMesh .material.depthWrite = false;
+    backgroundMesh .material.depthTest = false;
+    backgroundMesh .material.depthWrite = false;
 
-        // Create your background scene
-        var backgroundScene = new THREE.Scene();
-        var backgroundCamera = new THREE.Camera();
-        backgroundScene .add(backgroundCamera );
-        backgroundScene .add(backgroundMesh );
+    // Create your background scene
+    var backgroundScene = new THREE.Scene();
+    var backgroundCamera = new THREE.Camera();
+    backgroundScene .add(backgroundCamera );
+    backgroundScene .add(backgroundMesh );
 
     updateFcts.push(function(){
 
-      renderer.autoClear = false;
-          renderer.clear();
-          renderer.render(backgroundScene , backgroundCamera );
+    renderer.autoClear = false;
+    renderer.clear();
+    renderer.render(backgroundScene , backgroundCamera );
 
-        renderer.render( scene, camera );
+    renderer.render( scene, camera );
 
 
     });
@@ -104,7 +107,5 @@ function start(){
             }
         }
     }
-
-
     render();
 }
