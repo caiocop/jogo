@@ -18,6 +18,8 @@ function start(){
 
     document.body.appendChild( renderer.domElement );
 
+
+
     let circulos = [];
     for(let i = 0; i <= 20; i++){
         let position = (Math.random() * 8) - 5;
@@ -35,11 +37,36 @@ function start(){
 
     camera.position.z = 10;
 
+    // Load the background texture
+        var texture = THREE.ImageUtils.loadTexture("img/espaco.jpg");
+        var backgroundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(2, 2, 0),
+            new THREE.MeshBasicMaterial({
+                map: texture
+            }));
+
+        backgroundMesh .material.depthTest = false;
+        backgroundMesh .material.depthWrite = false;
+
+        // Create your background scene
+        var backgroundScene = new THREE.Scene();
+        var backgroundCamera = new THREE.Camera();
+        backgroundScene .add(backgroundCamera );
+        backgroundScene .add(backgroundMesh );
+
     updateFcts.push(function(){
+
+      renderer.autoClear = false;
+          renderer.clear();
+          renderer.render(backgroundScene , backgroundCamera );
+
         renderer.render( scene, camera );
+
+
     });
     let lastTimeMsec = null;
     function render(nowMsec) {
+
         if(!hit) {
             requestAnimationFrame(render);
             naveMesh.rotation.y += .1;
@@ -76,5 +103,7 @@ function start(){
             }
         }
     }
+
+
     render();
 }
