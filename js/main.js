@@ -1,30 +1,32 @@
 let updateFcts	= [];
 let renderer = new THREE.WebGLRenderer();
-let geometry = new THREE.CircleGeometry( 0.02, 32 );
 //nave
-let nave   = new THREE.OctahedronGeometry(0.08, 0);
-var material  = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture("img/nave.jpg"), side: THREE.DoubleSide });
+let nave   = new THREE.OctahedronGeometry(0.08, 32);
+var material  = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture("img/nave2.jpg"), side: THREE.DoubleSide });
 let naveMesh = new THREE.Mesh(nave, material);
 
 var hit = false;
 var point = 0;
 function start(){
-    //Definição da cena
     let scene = new THREE.Scene();
-    //Definição da câmera >>> PerspectiveCamera( fov, aspect, near, far )
     let camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 1000 );
-    //Tamanho da viewport
-    renderer.setSize( window.innerWidth , window.innerHeight );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setClearColor( 0x000000, 1);
 
     document.body.appendChild( renderer.domElement );
 
 
-
     let circulos = [];
+    let circleMaterial = new THREE.MeshBasicMaterial({
+        map: THREE.ImageUtils.loadTexture("img/meteor.jpg"),
+        side: THREE.DoubleSide
+    });
     for(let i = 0; i <= 20; i++){
+        let geometry = new THREE.CircleGeometry( Math.random() * 0.1, 32 );
         let position = (Math.random() * 8) - 5;
-        let circle = new THREE.Mesh( geometry, material );
+        let circle = new THREE.Mesh( geometry, circleMaterial );
         circle.position.set(position, 2.3, 0);
+
         circulos.push(circle);
         scene.add( circle );
     }
@@ -69,7 +71,6 @@ function start(){
 
         if(!hit) {
             requestAnimationFrame(render);
-            naveMesh.rotation.y += .1;
 
             for (let i = 0; i <= 20; i++) {
                 circulos[i].position.y -= Math.floor(Math.random() * 10) / 60;
