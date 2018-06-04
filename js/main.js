@@ -1,16 +1,12 @@
-
 let updateFcts	= [];
 let renderer = new THREE.WebGLRenderer();
-console.log("renderer");
 //nave
 var nave   = new THREE.OctahedronGeometry(0.08, 0);
 var material  = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture("img/nave.jpg"), side: THREE.DoubleSide });
 var naveMesh = new THREE.Mesh(nave, material);
-console.log("nave");
 var hit = false;
 var point = 0;
 function start(){
-    console.log("start");
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 1000 );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -25,7 +21,7 @@ function start(){
         side: THREE.DoubleSide
     });
     for(let i = 0; i <= 20; i++){
-        let geometry = new THREE.CircleGeometry( Math.random() * 0.1, 32 );
+        let geometry = new THREE.SphereGeometry( Math.random() * 0.3, 32 );
         let position = (Math.random() * 8) - 5;
         let circle = new THREE.Mesh( geometry, circleMaterial );
         circle.position.set(position, 2.3, 0);
@@ -71,20 +67,21 @@ function start(){
     });
     let lastTimeMsec = null;
     function render(nowMsec) {
-
         if(!hit) {
             requestAnimationFrame(render);
 
             for (let i = 0; i <= 20; i++) {
+                circulos[i].rotation.y += .1;
+                circulos[i].rotation.x += .1;
                 circulos[i].position.y -= Math.floor(Math.random() * 10) / 60;
                 if (naveMesh.position.x >= circulos[i].position.x - 0.1 && naveMesh.position.x <= circulos[i].position.x + 0.1 &&
                     naveMesh.position.y >= circulos[i].position.y - 0.1 && naveMesh.position.y <= circulos[i].position.y + 0.1) {
                     hit = true;
                 }
 
-                if (circulos[i].position.y - 0.05 < -2.1) {
+                if (circulos[i].position.y - 0.05 < -2.2) {
                     circulos[i].position.y = 2.3;
-                    circulos[i].position.x = (Math.random() * 8) - 5;
+                    circulos[i].position.x = (Math.random() * 8) - 4;
                     point ++;
 
                 }
@@ -96,7 +93,7 @@ function start(){
                 updateFn(deltaMsec / 1000, nowMsec / 1000)
             });
         }else{
-            if(confirm("Fim! pontos: "+point)){
+            if(confirm("Fim! pontuaçao: "+point)){
                 for (let i = 0; i <= 20; i++) {
                     circulos[i].position.y = 2.3;
                 }
