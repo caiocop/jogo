@@ -1,50 +1,108 @@
-//Definição da cena
-var scene = new THREE.Scene();
+let updateFcts	= [];
+let renderer = new THREE.WebGLRenderer();
+//nave
+var nave   = new THREE.OctahedronGeometry(0.08, 0);
+var material  = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture("img/nave.jpg"), side: THREE.DoubleSide });
+var naveMesh = new THREE.Mesh(nave, material);
+var hit = false;
+var point = 0;
+function start(){
+    let scene = new THREE.Scene();
+    let camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setClearColor( 0x000000, 1);
 
-//Definição da câmera >>> PerspectiveCamera( fov, aspect, near, far )
-var camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    document.body.appendChild( renderer.domElement );
 
-//Definição do renderizador
-var renderer = new THREE.WebGLRenderer();
 
-//Tamanho da viewport
-renderer.setSize( window.innerWidth, window.innerHeight );
+    let circulos = [];
+    let circleMaterial = new THREE.MeshBasicMaterial({
+        map: THREE.ImageUtils.loadTexture("img/meteor.jpg"),
+        side: THREE.DoubleSide
+    });
+    for(let i = 0; i <= 20; i++){
+        let geometry = new THREE.SphereGeometry( Math.random() * 0.3, 32 );
+        let position = (Math.random() * 8) - 5;
+        let circle = new THREE.Mesh( geometry, circleMaterial );
+        circle.position.set(position, 2.3, 0);
 
-//Definimos a cor de limpeza
-renderer.setClearColor( 0x000000, 1);
+        circulos.push(circle);
+        scene.add( circle );
+    }
 
-document.body.appendChild( renderer.domElement );
+    let light = new THREE.AmbientLight( 0xFFFFFF);
+    scene.add( light );
 
-//Definição do Objeto
-var sphere   = new THREE.SphereGeometry(0.10, 32, 32);
+    naveMesh.position.set(0, -1.5, 0);
+    scene.add(naveMesh);
 
-//Definição do Material
-var material  = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexturduete("img/planetaterra.jpg"),
-    side: THREE.DoubleSide });
-material.bumpMap = THREE.ImageUtils.loadTexture('img/planetaterrabump.jpg');
-material.bumpScale = 0.04;
+    camera.position.z = 10;
 
-material.specularMap = THREE.ImageUtils.loadTexture('img/planetaterraspec.jpg');
-material.specular = new THREE.Color('orange');
+    // Load the background texture
+    var texture = THREE.ImageUtils.loadTexture("img/espaco.jpg");
+    var backgroundMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(2, 2, 0),
+        new THREE.MeshBasicMaterial({
+            map: texture
+        }));
 
-//material.wireframe = true;
-var terraMesh = new THREE.Mesh(sphere, material);
-terraMesh.position.set(1.6, 0.7, 0);
-scene.add(terraMesh);
+    backgroundMesh .material.depthTest = false;
+    backgroundMesh .material.depthWrite = false;
 
-var light = new THREE.AmbientLight( 0xFFFFFF);
-scene.add( light );
+    // Create your background scene
+    var backgroundScene = new THREE.Scene();
+    var backgroundCamera = new THREE.Camera();
+    backgroundScene .add(backgroundCamera );
+    backgroundScene .add(backgroundMesh );
 
-var light = new THREE.SpotLight();
-light.position.set(100, 80, 30);
-light.intensity = 1.2
-scene.add(light);
+    updateFcts.push(function(){
 
-camera.position.z = 4;
+    renderer.autoClear = false;
+    renderer.clear();
+    renderer.render(backgroundScene , backgroundCamera );
 
-function render(){
-    requestAnimationFrame( render );
-    terraMesh.rotation.y += .01;
     renderer.render( scene, camera );
+
+
+    });
+    let lastTimeMsec = null;
+    function render(nowMsec) {
+        if(!hit) {
+            requestAnimationFrame(render);
+
+            for (let i = 0; i <= 20; i++) {
+                circulos[i].rotation.y += .1;
+                circulos[i].rotation.x += .1;
+                circulos[i].position.y -= Math.floor(Math.random() * 10) / 60;
+                if (naveMesh.position.x >= circulos[i].position.x - 0.1 && naveMesh.position.x <= circulos[i].position.x + 0.1 &&
+                    naveMesh.position.y >= circulos[i].position.y - 0.1 && naveMesh.position.y <= circulos[i].position.y + 0.1) {
+                    hit = true;
+                }
+
+                if (circulos[i].position.y - 0.05 < -2.2) {
+                    circulos[i].position.y = 2.3;
+                    circulos[i].position.x = (Math.random() * 8) - 4;
+                    point ++;
+
+                }
+            }
+            lastTimeMsec = lastTimeMsec || nowMsec - 1000 / 60;
+            let deltaMsec = Math.min(200, nowMsec - lastTimeMsec);
+            lastTimeMsec = nowMsec;
+            updateFcts.forEach(function (updateFn) {
+                updateFn(deltaMsec / 1000, nowMsec / 1000)
+            });
+        }else{
+            if(confirm("Fim! pontuaçao: "+point)){
+                for (let i = 0; i <= 20; i++) {
+                    circulos[i].position.y = 2.3;
+                }
+                naveMesh.position.set(0, -1.5, 0);
+                requestAnimationFrame(render);
+                hit = false;
+                point = 0;
+            }
+        }
+    }
+    render();
 }
-render();

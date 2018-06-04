@@ -3,120 +3,23 @@
 <head>
 	<meta charset="utf-8">
 	<title>Jogo</title>
-
-	<style type="text/css">
-		body {
+	<script src="lib/three.min.js"></script>
+	<script src="lib/threex.keyboard.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/movement.js"></script>
+	<style>
+		* {
 			margin: 0;
 			padding: 0;
+		}
+		html, body {
+			overflow: hidden;
 		}
 	</style>
 </head>
 <body>
-
-<script type="text/javascript" src="lib/build/three.js"></script>
-<script type="text/javascript">
-
-	//Definição da cena
-	var scene = new THREE.Scene();
-	//Definição da câmera >>> PerspectiveCamera( fov, aspect, near, far )
-	var camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 1000 );
-	//Definição do renderizador
-	var renderer = new THREE.WebGLRenderer();
-	//Tamanho da viewport
-	renderer.setSize( window.innerWidth, window.innerHeight );
-
-	//Definimos a cor de limpeza
-	renderer.setClearColor( 0x000000, 1);
-
-	document.body.appendChild( renderer.domElement );
-
-
-	var geometry = new THREE.CircleGeometry( 0.02, 32 );
-	var material = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } );
-	var circulos = [];
-	var circle = new THREE.Mesh( geometry, material );
-	circle.position.set(-1.4, 2.3, 0);
-	circulos.push(circle);
-	scene.add( circle );
-
-	var circle1 = new THREE.Mesh( geometry, material );
-	circle1.position.set(-1.0,  2.3, 0);
-	circulos.push(circle1);
-	scene.add( circle1 );
-
-	var circle2 = new THREE.Mesh( geometry, material );
-	circle2.position.set(-0.6,  2.3, 0);
-	circulos.push(circle2);
-	scene.add( circle2 );
-
-	var circle3 = new THREE.Mesh( geometry, material );
-	circle3.position.set(0.0,  2.3, 0);
-	circulos.push(circle3);
-	scene.add( circle3 );
-
-	var circle4 = new THREE.Mesh( geometry, material );
-	circle4.position.set(0.4,  2.3, 0);
-	circulos.push(circle4);
-	scene.add( circle4 );
-
-	var circle5 = new THREE.Mesh( geometry, material );
-	circle5.position.set(0.8,  2.3, 0);
-	circulos.push(circle5);
-	scene.add( circle5 );
-	
-
-	//Definição do Objeto
-	var nave   = new THREE.OctahedronGeometry(0.08, 0);
-	//Definição do Material
-
-
-
-	var material  = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture("img/nave.jpg"),
-		side: THREE.DoubleSide });
-
-
-	var naveMesh = new THREE.Mesh(nave, material);
-	naveMesh.position.set(0, -2, 0);
-	scene.add(naveMesh);
-
-
-	var light = new THREE.AmbientLight( 0xFFFFFF);
-	scene.add( light );
-
-	//var light = new THREE.SpotLight(0x0000FF);
-    //light.position(500, 0, 30);
-    //light.intensity = 5;
-    //scene.add(light);
-
-	camera.position.z = 10;
-
-	function render(){
-		requestAnimationFrame( render );
-		naveMesh.rotation.y += .1;
-		
-		for(var i = 0; i <=5;i++){
-			distancia = Math.floor(Math.random() * 10)/300;
-			circulos[i].position.y -= distancia;
-			if (naveMesh.position.x >= circulos[i].position.x - 0.05 && naveMesh.position.x <= circulos[i].position.x + 0.05 &&
-				 naveMesh.position.y >= circulos[i].position.y - 0.05 && naveMesh.position.y <= circulos[i].position.y + 0.05 ) {
-				circulos[i].position.y = 2.3;
-				circulos[i].position.x = Math.floor(Math.random() * 10) - 5;
-			}			
-						
-			if (circulos[i].position.y - 0.05 <= -2.1 && circulos[i].position.y + 0.05 >= -2.1) {
-				circulos[i].position.y = 2.3;
-				circulos[i].position.x = (Math.random() * 10) -45;
-				console.log(circulos[i].position.x = (Math.random() * 10) -5);
-			}				
-		}
-		
-		renderer.render( scene, camera );
-	}
-
-	render();
-
-
-
+	<script>
+        start();
 	</script>
 </body>
 </html>
